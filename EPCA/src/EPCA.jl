@@ -1,12 +1,12 @@
 module EPCA
 
+using LinearAlgebra
+
 greet() = print("Hello World!")
 
-function bregman_dist(F, p, q)
-    """
-    F must be diff'able and stringly convex on a closed, convex subset of R
-    """
-    return nothing
-end
+export
+    poisson_epca,
+    poisson_loss
+include("poisson.jl")
 
 end # module EPCA
