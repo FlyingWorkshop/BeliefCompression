@@ -19,8 +19,15 @@ function poisson_epca(B, n_components, maxiter=50)
     B̃ = rand(n_states, n_samples)
     U = rand(n_states, n_components)
     for _ in 1:maxiter
+        D = diag(3)  # TODO: fix this
+        D_inv = D
+
         # recompute each column of B̃
-        println("TODO")
+        B̃_new = zeros(size(B))
+        for (j, B̃j) in enumerate(eachrow(B̃))
+            # U' * D[j] 
+            B̃_new[j] = 0
+        end
         # recompute each row of U
     end
     return nothing
