@@ -16,3 +16,5 @@ Try to emulate PCA from python style for first draft
 
 TODO:
 * calculate losses by hand for bernoulli 
+* figure out how to use infiltrator to debug Poisson EPCA
+* figure out how to test poisson EPCA in a basic julia file (not just a notebook)
