@@ -1,5 +1,8 @@
-using POMDPs, POMDPTools
+using POMDPs
 using Optim
+using LinearAlgebra
+
+using Infiltrator
 
 """Compression"""
 DEFAULT_MAXITER = 5  # TODO: change this to 50 or so for deployment
@@ -17,17 +20,12 @@ function Compression(objective, B::Matrix, n_components::Int, maxiter::Int)
     n_states, n_samples = size(B)
 
     # initialize parameters
-    V = rand(n_samples, n_components)
     U = rand(n_states, n_components)
+    V = rand(n_components, n_samples)
 
     for _ in 1:maxiter
-        # optimize V and fix U
-        fixed_objective(V̂) = objective(U, V̂)
-        V = Optim.minimizer(optimize(fixed_objective, V))
-
-        # optimize U and fix V
-        fixed_objective(Û) = objective(Û, V)
-        U = Optim.minimizer(optimize(fixed_objective, U))
+        V = Optim.minimizer(optimize(V̂->objective(U, V̂), V))  # optimize V and fix U
+        U = Optim.minimizer(optimize(Û->objective(Û, V), U))  # optimize U and fix V
     end
 
     return Compression(U, V)
@@ -35,7 +33,7 @@ end
 
 function poisson_loss(U, V)
     B = exp.(U * V)  # TODO: check w/ Mykel that this is correct; see Eq. (4) in short paper + Eqs. (6, 8) in long paper
-    loss = exp.(U * V) - B ⋅ (U * V)
+    loss = exp.(U * V) .- B ⋅ (U * V)
     return sum(loss)  # TODO: check if this sum is over all elements
 end
 

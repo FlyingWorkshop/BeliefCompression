@@ -4,9 +4,13 @@ module EPCA
 
 greet() = print("Hello World!")
 
+# export
+#     poisson_epca,
+#     poisson_loss
+# include("poisson.jl")
+
 export
-    poisson_epca,
-    poisson_loss
-include("poisson.jl")
+    PoissonPCA
+include("bar.jl")
 
 end # module EPCA
