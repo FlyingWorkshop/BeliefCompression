@@ -1,6 +1,7 @@
 using POMDPs, POMDPTools
 
 """Compression"""
+
 abstract type Compression end
 mutable struct PoissonPCA <: Compression
     U
@@ -10,6 +11,11 @@ function PoissonPCA(belief_points::Vector{Vector{Float64}})
     U = nothing
     return PoissonPCA(U)
 end
+
+function make_compression()
+    return nothing
+end
+
 
 """Approximation"""
 abstract type Approximation end
