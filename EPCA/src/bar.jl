@@ -34,7 +34,7 @@ end
 function poisson_loss(U, V)
     B = exp.(U * V)  # TODO: check w/ Mykel that this is correct; see Eq. (4) in short paper + Eqs. (6, 8) in long paper
     loss = exp.(U * V) .- B ⋅ (U * V)
-    return sum(loss)  # TODO: check if this sum is over all elements
+    return sum(loss)
 end
 
 

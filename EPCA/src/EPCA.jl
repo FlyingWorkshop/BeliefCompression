@@ -9,8 +9,14 @@ greet() = print("Hello World!")
 #     poisson_loss
 # include("poisson.jl")
 
+# export
+#     PoissonPCA
+# include("bar.jl")
+
 export
-    PoissonPCA
-include("bar.jl")
+    PoissonPCA,
+    BernoulliPCA,
+    Compression
+include("baz.jl")
 
 end # module EPCA
