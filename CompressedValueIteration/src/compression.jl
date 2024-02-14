@@ -3,7 +3,7 @@ using Infiltrator
 
 ϵ = 0.001
 
-struct ExponentialFamilyPCA
+struct EPCA
     G
     g
     F
@@ -20,7 +20,7 @@ function PoissonPCA()
         f(x) = log(x)
         Bregman(p, q) = p * log((p + ϵ) / (q + ϵ)) + q - p  # with additive smoothing
     end
-    return ExponentialFamilyPCA(G, g, F, f, Bregman)
+    return EPCA(G, g, F, f, Bregman)
 end
     
 function BernoulliPCA()
@@ -33,7 +33,7 @@ function BernoulliPCA()
         # TODO: fact check above statement
         Bregman(p, q) = p * log((p + ϵ) / (q + ϵ)) + (1 - p) * log((1 - p + ϵ) / (1 - q + ϵ))  # with additive smoothing
     end
-    return ExponentialFamilyPCA(G, g, F, f, Bregman)
+    return EPCA(G, g, F, f, Bregman)
 end
 
 
@@ -43,7 +43,7 @@ struct Compression  # TODO: Note sure if I need this
 end
 
 
-function Compression(X::Matrix, l::Int, epca::ExponentialFamilyPCA, maxiter::Int)
+function Compression(X::Matrix, l::Int, epca::EPCA, maxiter::Int)
     """
     n = # belief samples
     d = # states
@@ -62,7 +62,6 @@ function Compression(X::Matrix, l::Int, epca::ExponentialFamilyPCA, maxiter::Int
     L(A, V) = sum(epca.Bregman(X, epca.g(A * V)) + ϵ * epca.Bregman(μ0, epca.g(A * V)))
     # L(A, V) = sum(epca.Bregman(X, epca.g(A * V)))
 
-
     for _ in 1:maxiter
         println("Loss: ", L(Â, V̂))
         # println("A: ", Â)
@@ -72,29 +71,6 @@ function Compression(X::Matrix, l::Int, epca::ExponentialFamilyPCA, maxiter::Int
         Â = Optim.minimizer(optimize(A->L(A, V̂), Â))  # optimize Â and fix V̂
         V̂ = Optim.minimizer(optimize(V->L(Â, V), V̂))  # optimize V̂ and fix Â
     end
-    println("L1 Distance:", sum(X .- epca.g(Â * V̂)))
+    # println("L1 Distance:", sum(X .- epca.g(Â * V̂)))
     return Compression(Â, V̂)
 end
-
-
-function SlowCompression(X::Matrix, l::Int, epca::ExponentialFamilyPCA, maxiter::Int)
-    n, d = size(X)
-    A = zeros(n, l)
-    V = zeros(l, d)
-
-    for n in 1:N
-        for c in 1:l
-            # Optimize the c'th component with other components fixed
-            v_c = rand(d)
-            s(i, j) = sum([k == c ? 0 : A[i, k] * V[k, j] for k in 1:c])
-            for t in 1:maxiter
-                for i in 1:n
-                    A[i, c] = Optim.minimizer(optimize(a->sum([epca.Bregman(X[i, j], epca.g(a * v_c[j] + s(i, j)))  for j in 1:d]), A[i, c]))
-                    # TODO: do v
-                end
-            end
-        end
-    end
-
-end
-
