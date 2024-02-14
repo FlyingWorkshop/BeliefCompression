@@ -1,16 +1,16 @@
 using Optim
-using Infiltrator
 
 ϵ = 0.001
 
-struct EPCA
+abstract type Compression end
+struct EPCA <: Compression
     G
     g
+    # μ0  # potentially move μ0 here and make it an argument when creating a PoissonPCA
     F
     f
     Bregman
 end
-
 
 function PoissonPCA()
     @. begin
@@ -38,13 +38,7 @@ function BernoulliPCA()
 end
 
 
-struct Compression  # TODO: Note sure if I need this
-    A
-    V
-end
-
-
-function Compression(X::Matrix, l::Int, epca::EPCA, maxiter::Int)
+function compress(X::Matrix, l::Int, epca::EPCA, maxiter::Int)
     """
     n = # belief samples
     d = # states
@@ -73,5 +67,5 @@ function Compression(X::Matrix, l::Int, epca::EPCA, maxiter::Int)
         V̂ = Optim.minimizer(optimize(V->L(Â, V), V̂))  # optimize V̂ and fix Â
     end
     # println("L1 Distance:", sum(X .- epca.g(Â * V̂)))
-    return Compression(Â, V̂)
+    return (Â, V̂, epca.g(Â * V̂))
 end

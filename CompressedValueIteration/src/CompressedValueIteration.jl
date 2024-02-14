@@ -2,15 +2,21 @@ module CompressedValueIteration
 
 using Infiltrator
 
-using POMDPs
-using Optim
-
+# using POMDPs
+# using Optim
 
 
 export
     PoissonPCA,
     BernoulliPCA,
-    Compression
-include("epca_compression.jl")
+    compress
+include("compression.jl")
+
+
+export
+    CompressedSolver,
+    solve
+include("compressed_solver.jl")
+
 
 end # module CompressedValueIteration
