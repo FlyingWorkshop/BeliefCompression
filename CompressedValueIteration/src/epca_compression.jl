@@ -22,7 +22,8 @@ function PoissonPCA()
     end
     return EPCA(G, g, F, f, Bregman)
 end
-    
+
+
 function BernoulliPCA()
     @. begin
         G(θ) = log(1 + exp(θ))
