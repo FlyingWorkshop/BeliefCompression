@@ -12,6 +12,7 @@ struct EPCA <: Compression
     Bregman
 end
 
+
 function PoissonPCA()
     @. begin
         G(θ) = exp(θ)
@@ -67,6 +68,6 @@ function compress(X::Matrix, l::Int, epca::EPCA, maxiter::Int)
         V̂ = Optim.minimizer(optimize(V->L(Â, V), V̂))  # optimize V̂ and fix Â
     end
     # println("L1 Distance:", sum(X .- epca.g(Â * V̂)))
-    Θ = epca.g(Â * V̂)  # compressed representation
-    return Θ
+    # Θ = epca.g(Â * V̂)  # compressed representation
+    return (Â, V̂)
 end
