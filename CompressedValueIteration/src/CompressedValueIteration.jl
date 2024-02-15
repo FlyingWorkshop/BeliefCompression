@@ -7,11 +7,17 @@ using Infiltrator
 
 
 export
+    Compression,
     PoissonPCA,
     BernoulliPCA,
     compress
 include("compression.jl")
 
+export
+    Approximation,
+    SingleNearestNeighbor,
+    approximate
+include("approximation.jl")
 
 export
     CompressedSolver,

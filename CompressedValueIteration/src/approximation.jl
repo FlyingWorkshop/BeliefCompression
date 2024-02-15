@@ -1,4 +1,6 @@
 abstract type Approximation end
-mutable struct NearestNeighborBeliefSamples <: Approximation
-    belief_samples
+struct SingleNearestNeighbor <: Approximation end
+
+function approximate(::SingleNearestNeighbor, A, B)
+    return nothing
 end
