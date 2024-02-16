@@ -5,13 +5,21 @@ using Infiltrator
 # using POMDPs
 # using Optim
 
+using 
+
 
 export
-    Compression,
-    PoissonPCA,
-    BernoulliPCA,
-    compress
-include("compression.jl")
+    Compressor,
+    compress,
+    decompress,
+include("compressor.jl")
+
+# export
+#     Compression,
+#     PoissonPCA,
+#     BernoulliPCA,
+#     compress
+# include("compression.jl")
 
 export
     Approximation,
