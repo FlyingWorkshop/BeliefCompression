@@ -1,2 +1,4 @@
-[deps]
-Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+name = "EPCA"
+uuid = "11e87cda-3a35-409a-8e6b-280a62a99146"
+authors = ["Logan Mondal Bhamidipaty <76822456+FlyingWorkshop@users.noreply.github.com>"]
+version = "0.1.0"

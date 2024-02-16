@@ -24,6 +24,8 @@ function PoissonPCA()
     return EPCA(G, g, F, f, Bregman)
 end
 
+objective(x) = x + ForwardDiff.derivative(f, [x_init])
+
 
 function BernoulliPCA()
     @. begin

@@ -1,4 +1,4 @@
-module CompressedValueIteration
+module CompressedBeliefPOMDPs
 
 using Infiltrator
 
@@ -25,4 +25,4 @@ export
 include("compressed_solver.jl")
 
 
-end # module CompressedValueIteration
+end # module CompressedBeliefPOMDPs
