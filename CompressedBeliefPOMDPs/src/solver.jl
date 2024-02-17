@@ -43,6 +43,7 @@ function POMDPs.solve(solver::CompressedSolver, pomdp::POMDP)
     for b̃s in eachrow(B̃s), a in actions(pomdp)
         for o in observations(pomdp)   # TODO: use observations or observation (singular); space or distribution; how to handle both?
             b = decompress(solver.compressor, b̃s')  # TODO: potentially just decompress entire matrix before iterating across rows
+            @infiltrate
             bp = POMDPs.update(solver.updater, b, a, o)
             b̃p = compress(solver.compressor, bp)
             b̃sp = approximate(solver.approximator, b̃p)
