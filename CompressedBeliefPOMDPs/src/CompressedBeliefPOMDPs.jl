@@ -5,32 +5,24 @@ using Infiltrator
 # using POMDPs
 # using Optim
 
-using 
-
-
 export
     Compressor,
+    fit!,
     compress,
-    decompress,
+    decompress
 include("compressor.jl")
 
-# export
-#     Compression,
-#     PoissonPCA,
-#     BernoulliPCA,
-#     compress
-# include("compression.jl")
-
 export
-    Approximation,
-    SingleNearestNeighbor,
-    approximate
-include("approximation.jl")
+    Approximator,
+    approximate,
+    SingleNearestNeighbor
+include("approximator.jl")
+
 
 export
     CompressedSolver,
     solve
-include("compressed_solver.jl")
+include("solver.jl")
 
 
 end # module CompressedBeliefPOMDPs

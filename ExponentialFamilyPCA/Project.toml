@@ -5,3 +5,4 @@ version = "0.1.0"
 
 [deps]
 CompressedBeliefPOMDPs = "5eea3c19-248f-4333-a7fb-b3d728c4ea9c"
+Optim = "429524aa-4258-5aef-a3af-852621145aeb"

@@ -1,8 +1,8 @@
 using NearestNeighbors
 
 
-abstract type Approximation end
-struct SingleNearestNeighbor <: Approximation end
+abstract type Approximator end
+struct SingleNearestNeighbor <: Approximator end
 
 
 function approximate(::SingleNearestNeighbor, data, points)
