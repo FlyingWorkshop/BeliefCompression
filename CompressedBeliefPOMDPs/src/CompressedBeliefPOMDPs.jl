@@ -12,17 +12,17 @@ export
     decompress
 include("compressor.jl")
 
-export
-    Approximator,
-    approximate,
-    SingleNearestNeighbor
-include("approximator.jl")
+# export
+#     Approximator,
+#     approximate,
+#     SingleNearestNeighbor
+# include("approximator.jl")
 
 
-export
-    CompressedSolver,
-    solve
-include("solver.jl")
+# export
+#     CompressedSolver,
+#     solve
+# include("solver.jl")
 
 
 end # module CompressedBeliefPOMDPs

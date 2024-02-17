@@ -4,7 +4,7 @@ using POMDPTools: Deterministic
 
 
 struct CompressedSolver <: Solver
-    compressor::Compression
+    compressor::Compressor
     approximator::Approximator
 end
 
