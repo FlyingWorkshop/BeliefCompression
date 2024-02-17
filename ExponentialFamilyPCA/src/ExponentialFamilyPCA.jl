@@ -47,24 +47,41 @@ end
 function CompressedBeliefPOMDPs.fit!(epca::EPCA, X::Matrix; verbose=false, maxiter::Int=50)
     @assert epca.l > 0
     epca.n, epca.d = size(X)
-    epca.A = rand(epca.n, epca.l)
+    epca.A = zeros(epca.n, epca.l)
     epca.V = rand(epca.l, epca.d)
 
     L(A, V) = sum(epca.Bregman(X, epca.g(A * V)) + epca.ϵ * epca.Bregman(epca.μ0, epca.g(A * V)))
 
     for _ in 1:maxiter
         if verbose println("Loss: ", L(epca.A, epca.V)) end
-        epca.A = Optim.minimizer(optimize(A->L(A, epca.V), epca.A))
         epca.V = Optim.minimizer(optimize(V->L(epca.A, V), epca.V))
+        epca.A = Optim.minimizer(optimize(A->L(A, epca.V), epca.A))
     end
 end
 
-# CompressedBeliefPOMDPs.compress(epca::EPCA, data::Matrix) = 
-CompressedBeliefPOMDPs.decompress(epca::EPCA, compressed::Matrix) = epca.g(epca.A * B̃)
+# TODO: make sure this works for both matrices and vectors!! also update the signature in compressed belief pomdps
+function CompressedBeliefPOMDPs.compress(epca::EPCA, X::Matrix; maxiter=50, verbose=false)
+    n, d = size(X)
+    @assert d == epca.d
+    Â = zeros(n, epca.l)
+    L(A, V) = sum(epca.Bregman(X, epca.g(A * V)) + epca.ϵ * epca.Bregman(epca.μ0, epca.g(A * V)))
+    for _ in 1:maxiter
+        if verbose println("Loss: ", L(Â, epca.V)) end
+        Â = Optim.minimizer(optimize(A->L(A, epca.V), Â))
+    end
+    return Â
+end
+
+CompressedBeliefPOMDPs.decompress(epca::EPCA, compressed::Matrix) = epca.g(compressed * epca.V)
+
 
 export
     PoissonPCA
 include("poisson.jl")
+
+export
+    BernoulliPCA
+include("bernoulli.jl")
 
 
 end # module ExponentialFamilyPCA
