@@ -18,8 +18,7 @@ mutable struct EPCA <: CompressedBeliefPOMDPs.Compressor
     Bregman  # generalized Bregman divergence induced by F
 
     μ0::Real  # for numerical stability; must be in the range of g
-    maxiter::Int
-    ϵ::Real  # for additive smoothing
+    ϵ::Real  # controls weight of stabilizing term in loss function
 
     EPCA() = new()
 end
@@ -36,17 +35,16 @@ end
 # end
 
 
-function EPCA(l::Int, μ0::Real; maxiter::Int=50, ϵ::Float64=0.01)
+function EPCA(l::Int, μ0::Real; ϵ::Float64=0.01)
     epca = EPCA()
     epca.l = l
     epca.μ0 = μ0
-    epca.maxiter = maxiter
     epca.ϵ = ϵ
     return epca
 end
 
 
-function CompressedBeliefPOMDPs.fit!(epca::EPCA, X::Matrix)
+function CompressedBeliefPOMDPs.fit!(epca::EPCA, X::Matrix; verbose=false, maxiter::Int=50)
     @assert epca.l > 0
     epca.n, epca.d = size(X)
     epca.A = rand(epca.n, epca.l)
@@ -54,11 +52,8 @@ function CompressedBeliefPOMDPs.fit!(epca::EPCA, X::Matrix)
 
     L(A, V) = sum(epca.Bregman(X, epca.g(A * V)) + epca.ϵ * epca.Bregman(epca.μ0, epca.g(A * V)))
 
-    for _ in 1:epca.maxiter
-        println("Loss: ", L(epca.A, epca.V))
-        # println("A: ", Â)
-        # println("V: ", V̂)
-        # println()
+    for _ in 1:maxiter
+        if verbose println("Loss: ", L(epca.A, epca.V)) end
         epca.A = Optim.minimizer(optimize(A->L(A, epca.V), epca.A))
         epca.V = Optim.minimizer(optimize(V->L(epca.A, V), epca.V))
     end
