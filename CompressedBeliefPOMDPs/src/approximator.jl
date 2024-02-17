@@ -1,6 +1,5 @@
 using NearestNeighbors
 
-
 abstract type Approximator end
 struct SingleNearestNeighbor <: Approximator end
 

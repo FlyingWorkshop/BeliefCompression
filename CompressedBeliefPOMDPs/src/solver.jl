@@ -9,67 +9,62 @@ struct CompressedSolver <: Solver
 end
 
 
+# function bj(s; α=1)
+#     prob = α * O(s, a, z)
+#     d = transition(pomdp, s, a)
+#     for (i, sp) in enumerate(states(pomdp))
+#         pdf(d, sp) * bi[i]
+#     end
+# end
+
 function solve(solver::CompressedSolver, pomdp::POMDP)
     # collect sample beliefs (TODO)
     n_samples, n_states = (10, 5)
     beliefs = rand(n_samples, n_states)
 
     # compress belief space
-    # TODO: rather than returning U, return a way to recover the original belief so that would be f(x) = g(Ux) [might be G double check]
     fit!(solver.compressor, beliefs)
     compressed = compress(solver.compressor, beliefs)
 
     # convert low-dimensional space into discrete state space
     res = 5
     axis = LinRange(0, 1, res)
-    grid = reinterpret(reshape, Float64, [(i, j) for i=axis for j=axis])
-    S = approximate(solver.approximator, grid', B̃)
+    grid = reinterpret(reshape, Float64, [(i, j) for i=axis for j=axis])  # TODO: use GridInterpolations.jl
+    approximated = approximate(solver.approximator, grid', compressed)
+    reconstructed = decompress(solver.compressor, approximated)
 
-    # learn belief transitions and reward function
+    # create a low-dimensional belief MDP approximation of the POMDP
+    α = 1  # TODO: put elsewhere
     mdp = QuickMDP(
-        function (s, a, rng)        
-            x, v = s
-            vp = clamp(v + a*0.001 + cos(3*x)*-0.0025, -0.07, 0.07)
-            xp = x + vp
-            if xp > 0.5
-                r = 100.0
-            else
-                r = -1.0
-            end
-            return (sp=(xp, vp), r=r)
-        end,
-        reward = function(disc_b̃, a)
-            result = 0
-            for (i, s) in enumerate(states(pomdp))
-                b = recover_original_belief(disc_b̃)  # TODO
-                result += reward(pomdp, s, a) * b[i]
-            end
-            return result
-        end,
-        actions = actions(pomdp),
         initialstate = initialstate(pomdp),
+        states = states(pomdp),
         discount = discount(pomdp),
-        # isterminal = s -> s[1] > 0.5
-    )
+        transition = function(s, a)
 
-    a = initialstate(pomdp)
 
-    mountaincar = QuickMDP(
-        function (s, a, rng)        
-            x, v = s
-            vp = clamp(v + a*0.001 + cos(3*x)*-0.0025, -0.07, 0.07)
-            xp = x + vp
-            if xp > 0.5
-                r = 100.0
-            else
-                r = -1.0
+            # NOTE: doesn't work when base (PO)MDP uses an implicit distribution
+            ImplicitDistribution(s, a) do s, a, rng
+                # TODO: get Mykel to double check this
+                T = transition(pomdp, s, a)
+                sp = rand(rng, T)
+                O = observation(pomdp, s, a, sp)  # TODO: ask Mykel if this is the right distribution
+                z = rand(rng, O)
+
+                pdf(d, z)
+
+
+                return s + a
             end
-            return (sp=(xp, vp), r=r)
         end,
-        actions = [-1., 0., 1.],
-        initialstate = Deterministic((-0.5, 0.0)),
-        discount = 0.95,
-        isterminal = s -> s[1] > 0.5
+        reward = function(b̃, a)
+            r = 0.0
+            b = decompress(solver.compressor, b̃)
+            for (i, s) in enumerate(states(pomdp))
+                r += reward(pomdp, s, a) * b[i]
+            end
+            return r
+        end,
+        discount = discount(pomdp),
     )
 
     return "Hello World!"
