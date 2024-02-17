@@ -1,4 +1,4 @@
-module ExponentialFamilyPCA
+module ExpFamilyPCA
 
 using Optim
 using CompressedBeliefPOMDPs
@@ -84,4 +84,4 @@ export
 include("bernoulli.jl")
 
 
-end # module ExponentialFamilyPCA
+end # module ExpFamilyPCA
