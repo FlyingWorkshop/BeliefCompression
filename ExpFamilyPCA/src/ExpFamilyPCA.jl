@@ -44,7 +44,7 @@ function EPCA(l::Int, μ0::Real; ϵ::Float64=0.01)
 end
 
 
-function CompressedBeliefPOMDPs.fit!(epca::EPCA, X::Matrix; verbose=false, maxiter::Int=50)
+function CompressedBeliefPOMDPs.fit!(epca::EPCA, X; verbose=false, maxiter::Int=50)
     @assert epca.l > 0
     epca.n, epca.d = size(X)
     epca.A = zeros(epca.n, epca.l)
@@ -60,7 +60,7 @@ function CompressedBeliefPOMDPs.fit!(epca::EPCA, X::Matrix; verbose=false, maxit
 end
 
 # TODO: make sure this works for both matrices and vectors!! also update the signature in compressed belief pomdps
-function CompressedBeliefPOMDPs.compress(epca::EPCA, X::Matrix; maxiter=50, verbose=false)
+function CompressedBeliefPOMDPs.compress(epca::EPCA, X; maxiter=50, verbose=false)
     n, d = size(X)
     @assert d == epca.d
     Â = zeros(n, epca.l)
@@ -72,7 +72,7 @@ function CompressedBeliefPOMDPs.compress(epca::EPCA, X::Matrix; maxiter=50, verb
     return Â
 end
 
-CompressedBeliefPOMDPs.decompress(epca::EPCA, compressed::Matrix) = epca.g(compressed * epca.V)
+CompressedBeliefPOMDPs.decompress(epca::EPCA, compressed) = epca.g(compressed * epca.V)
 
 
 export

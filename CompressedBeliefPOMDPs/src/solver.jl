@@ -11,15 +11,6 @@ struct CompressedSolver <: POMDPs.Solver
 end
 
 
-# function bj(s; α=1)
-#     prob = α * O(s, a, z)
-#     d = transition(pomdp, s, a)
-#     for (i, sp) in enumerate(states(pomdp))
-#         pdf(d, sp) * bi[i]
-#     end
-# end
-
-
 function POMDPs.solve(solver::CompressedSolver, pomdp::POMDP)
     # collect sample beliefs (TODO)
     n_samples, n_states = (10, 5)
@@ -48,9 +39,10 @@ function POMDPs.solve(solver::CompressedSolver, pomdp::POMDP)
 
     # compute transitions for belief MDP
     T̃s = Dict()
-    for b̃s in B̃s, a in actions(pomdp)
+
+    for b̃s in eachrow(B̃s), a in actions(pomdp)
         for o in observations(pomdp)   # TODO: use observations or observation (singular); space or distribution; how to handle both?
-            b = decompress(solver.compressor, b̃s)
+            b = decompress(solver.compressor, b̃s')  # TODO: potentially just decompress entire matrix before iterating across rows
             bp = POMDPs.update(solver.updater, b, a, o)
             b̃p = compress(solver.compressor, bp)
             b̃sp = approximate(solver.approximator, b̃p)
@@ -70,8 +62,8 @@ function POMDPs.solve(solver::CompressedSolver, pomdp::POMDP)
         end
     end
 
-    function T(s, a, s')
-        return T̃s[s, a, s']
+    function T(s, a, sp)
+        return T̃s[s, a, sp]
     end
 
     # create a low-dimensional belief MDP approximation of the POMDP

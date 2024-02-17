@@ -16,3 +16,6 @@ function PoissonPCA(l::Int; μ0::Real=0, kwargs...)
     epca.Bregman = Bregman
     return epca
 end
+
+
+# TODO: include a normalized Poisson w/ link function in footnote 5 of long paper
