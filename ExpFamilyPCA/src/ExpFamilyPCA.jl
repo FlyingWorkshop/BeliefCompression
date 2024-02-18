@@ -69,10 +69,10 @@ function CompressedBeliefPOMDPs.compress(epca::EPCA, X; maxiter=50, verbose=fals
         if verbose println("Loss: ", L(Â, epca.V)) end
         Â = Optim.minimizer(optimize(A->L(A, epca.V), Â))
     end
-    return Â
+    return Â * epca.V
 end
 
-CompressedBeliefPOMDPs.decompress(epca::EPCA, compressed) = epca.g(compressed * epca.V)
+CompressedBeliefPOMDPs.decompress(epca::EPCA, compressed) = epca.g(compressed)
 
 
 export

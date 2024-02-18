@@ -11,6 +11,20 @@ struct CompressedSolver <: POMDPs.Solver
 end
 
 
+function sample_beliefs(pomdp::POMDP)
+    b = initialize_belief(up, b0)
+    r_total = 0.0
+    d = 1.0
+    while !isterminal(pomdp, s)
+        a = action(policy, b)
+        s, o, r = @gen(:sp,:o,:r)(pomdp, s, a)
+        r_total += d*r
+        d *= discount(pomdp)
+        b = update(up, b, a, o)
+    end
+end
+
+
 function POMDPs.solve(solver::CompressedSolver, pomdp::POMDP)
     # collect sample beliefs (TODO)
     n_samples = 10
@@ -47,6 +61,7 @@ function POMDPs.solve(solver::CompressedSolver, pomdp::POMDP)
             b̃p = compress(solver.compressor, bp.b')
             b̃sp = approximate(solver.approximator, grid', b̃p)
 
+            # TODO: figure out if ignoring the weighting scheme is a problem
             prob = 0.0
             for sp in states(pomdp)
                 O = observation(pomdp, a, sp)
@@ -62,11 +77,10 @@ function POMDPs.solve(solver::CompressedSolver, pomdp::POMDP)
         end
     end
 
-    function T(s, a, sp)
-        return T̃s[s, a, sp]
-    end
+    T(s, a, sp) = T̃s[s, a, sp]
 
     # create a low-dimensional belief MDP approximation of the POMDP
+    b0 = initialstate(pomdp)
     mdp = QuickMDP(
         states = B̃s,
         actions = actions(pomdp),
