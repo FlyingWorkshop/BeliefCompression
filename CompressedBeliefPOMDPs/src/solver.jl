@@ -1,19 +1,20 @@
 using POMDPs
 using QuickPOMDPs
-using POMDPTools: Deterministic
+using POMDPTools
 
 
 struct CompressedSolver <: POMDPs.Solver
-    # TODO: probably need a base solver that takes care of the MDP
     compressor::Compressor
     approximator::Approximator
     updater::POMDPs.Updater
+    base_solver::POMDPs.Solver
 end
 
 
 function POMDPs.solve(solver::CompressedSolver, pomdp::POMDP)
     # collect sample beliefs (TODO)
-    n_samples, n_states = (10, 5)
+    n_samples = 10
+    n_states = length(states(pomdp))
     B = rand(n_samples, n_states)
 
     # compress belief space
@@ -24,16 +25,13 @@ function POMDPs.solve(solver::CompressedSolver, pomdp::POMDP)
     res = 5
     axis = LinRange(0, 1, res)
     grid = reinterpret(reshape, Float64, [(i, j) for i=axis for j=axis])  # TODO: use GridInterpolations.jl
-    B̃s = approximate(solver.approximator, grid', B̃)
+    B̃s = approximate(solver.approximator, grid', B̃)  # TODO: perhaps move the grid into a field of approximator?
     # TODO: can I move all of the decompression outside of R and T?
 
     # compute rewards for belief MDP
     function R(b̃s, a)
-        r = 0.0
         b = decompress(solver.compressor, b̃s)
-        for (i, s) in enumerate(states(pomdp))
-            r += reward(pomdp, s, a) * b[i]
-        end
+        r = sum([reward(pomdp, s, a) * pdf(b, s) for s in state(pomdp)])
         return r
     end
 
@@ -43,19 +41,20 @@ function POMDPs.solve(solver::CompressedSolver, pomdp::POMDP)
     for b̃s in eachrow(B̃s), a in actions(pomdp)
         for o in observations(pomdp)   # TODO: use observations or observation (singular); space or distribution; how to handle both?
             b = decompress(solver.compressor, b̃s')  # TODO: potentially just decompress entire matrix before iterating across rows
-            @infiltrate
+            b = vec(b / sum(b))  # normalize;  # TODO: why doesn't it already sum to 1? Does this mean I have a bug?
+            b = DiscreteBelief(pomdp, b)
             bp = POMDPs.update(solver.updater, b, a, o)
-            b̃p = compress(solver.compressor, bp)
-            b̃sp = approximate(solver.approximator, b̃p)
+            b̃p = compress(solver.compressor, bp.b')
+            b̃sp = approximate(solver.approximator, grid', b̃p)
 
             prob = 0.0
             for sp in states(pomdp)
-                O = observation(a, sp)
+                O = observation(pomdp, a, sp)
                 prob += pdf(O, o)
                 multiplier = 0.0
-                for (i, s) in enumerate(states(pomdp))
+                for s in states(pomdp)
                     T = transition(pomdp, s, a)
-                    multiplier += pdf(T, sp) * b[i]
+                    multiplier += pdf(T, sp) * pdf(b, s)
                 end
                 prob *= multiplier
             end
@@ -69,12 +68,12 @@ function POMDPs.solve(solver::CompressedSolver, pomdp::POMDP)
 
     # create a low-dimensional belief MDP approximation of the POMDP
     mdp = QuickMDP(
-        initialstate = Uniform(B̃s),  # TODO: maybe change
         states = B̃s,
+        actions = actions(pomdp),
         discount = discount(pomdp),
         transition = T,
         reward = R,
     )
-
-    return "Hello World!"
+    # TODO: need to conver this to an action in the "real world"
+    return solve(solver.base_solver, mdp)
 end
