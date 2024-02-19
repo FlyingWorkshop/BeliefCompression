@@ -21,9 +21,9 @@ include("approximation/approximator.jl")
 export
     Sampler,
     BaseSampler,
-    RandomSampler,
+    DiscreteRandomSampler,
     sample
-include("sampler.jl")
+include("sampling.jl")
 
 export
     CompressedSolver,

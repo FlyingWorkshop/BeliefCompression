@@ -3,6 +3,7 @@ using QuickPOMDPs
 using POMDPTools
 
 struct CompressedSolver <: POMDPs.Solver
+    sampler::Sampler
     compressor::Compressor
     approximator::Approximator
     updater::POMDPs.Updater
@@ -12,9 +13,7 @@ end
 
 function POMDPs.solve(solver::CompressedSolver, pomdp::POMDP)
     # collect sample beliefs
-    n_samples = 10
-    B = random_sample(pomdp, n_samples)
-    @infiltrate
+    B = sample(solver.sampler, pomdp)
 
     # compress belief space
     fit!(solver.compressor, B)
