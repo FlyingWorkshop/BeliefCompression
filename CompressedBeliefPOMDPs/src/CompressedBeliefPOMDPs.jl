@@ -16,7 +16,14 @@ export
     Approximator,
     approximate,
     SingleNearestNeighbor
-include("approximator.jl")
+include("approximation/approximator.jl")
+
+export
+    Sampler,
+    BaseSampler,
+    RandomSampler,
+    sample
+include("sampler.jl")
 
 export
     CompressedSolver,

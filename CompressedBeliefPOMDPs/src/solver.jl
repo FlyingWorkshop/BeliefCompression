@@ -2,7 +2,6 @@ using POMDPs
 using QuickPOMDPs
 using POMDPTools
 
-
 struct CompressedSolver <: POMDPs.Solver
     compressor::Compressor
     approximator::Approximator
@@ -11,25 +10,11 @@ struct CompressedSolver <: POMDPs.Solver
 end
 
 
-function sample_beliefs(pomdp::POMDP)
-    b = initialize_belief(up, b0)
-    r_total = 0.0
-    d = 1.0
-    while !isterminal(pomdp, s)
-        a = action(policy, b)
-        s, o, r = @gen(:sp,:o,:r)(pomdp, s, a)
-        r_total += d*r
-        d *= discount(pomdp)
-        b = update(up, b, a, o)
-    end
-end
-
-
 function POMDPs.solve(solver::CompressedSolver, pomdp::POMDP)
-    # collect sample beliefs (TODO)
+    # collect sample beliefs
     n_samples = 10
-    n_states = length(states(pomdp))
-    B = rand(n_samples, n_states)
+    B = random_sample(pomdp, n_samples)
+    @infiltrate
 
     # compress belief space
     fit!(solver.compressor, B)
@@ -80,13 +65,31 @@ function POMDPs.solve(solver::CompressedSolver, pomdp::POMDP)
     T(s, a, sp) = T̃s[s, a, sp]
 
     # create a low-dimensional belief MDP approximation of the POMDP
-    b0 = initialstate(pomdp)
+    # b0 = initialstate(pomdp)
+    # mdp = QuickMDP(
+    #     states = B̃s,
+    #     actions = actions(pomdp),
+    #     discount = discount(pomdp),
+    #     transition = T,
+    #     reward = R,
+    # )
+    # TODO: use discrete explicit MDPs instead (https://juliapomdp.github.io/QuickPOMDPs.jl/v0.2/discrete_explicit/)
     mdp = QuickMDP(
-        states = B̃s,
-        actions = actions(pomdp),
-        discount = discount(pomdp),
-        transition = T,
-        reward = R,
+        function (s, a, rng)        
+            x, v = s
+            vp = clamp(v + a*0.001 + cos(3*x)*-0.0025, -0.07, 0.07)
+            xp = x + vp
+            if xp > 0.5
+                r = 100.0
+            else
+                r = -1.0
+            end
+            return (sp=(xp, vp), r=r)
+        end,
+        actions = [-1., 0., 1.],
+        initialstate = Deterministic((-0.5, 0.0)),
+        discount = 0.95,
+        isterminal = s -> s[1] > 0.5
     )
     # TODO: need to conver this to an action in the "real world"
     return solve(solver.base_solver, mdp)
