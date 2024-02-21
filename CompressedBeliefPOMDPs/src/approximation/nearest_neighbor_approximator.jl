@@ -24,4 +24,10 @@ function approximate(approximator::SingleNearestNeighbor, points)
     return approximator.data[idxs, :]
 end
 
-function weight(approximator::SingleNearestNeighbor, data)
+function weight(approximator::SingleNearestNeighbor, points)
+    _, dists = nn(approximator.tree, points')
+    min_dist = minimum(dists)
+    min_count = count(x -> x == min_dist, dists)
+    w = [(d == min_dist) ? (1 / min_count) : 0 for d in dists]
+    return w
+end

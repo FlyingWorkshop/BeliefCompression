@@ -2,7 +2,7 @@
 
 julia_version = "1.10.1"
 manifest_format = "2.0"
-project_hash = "4c660be3d4483c3afaf0d1a374894d7c506d454f"
+project_hash = "caab966056efb2467f99235a354530a84a74e003"
 
 [[deps.AMD]]
 deps = ["LinearAlgebra", "SparseArrays", "SuiteSparse_jll"]
@@ -111,9 +111,9 @@ version = "0.5.1"
 
 [[deps.ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra"]
-git-tree-sha1 = "ad25e7d21ce10e01de973cdc68ad0f850a953c52"
+git-tree-sha1 = "892b245fdec1c511906671b6a5e1bafa38a727c1"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-version = "1.21.1"
+version = "1.22.0"
 weakdeps = ["SparseArrays"]
 
     [deps.ChainRulesCore.extensions]
@@ -187,6 +187,12 @@ deps = ["Base64", "Colors", "DataStructures", "Dates", "IterTools", "JSON", "Lin
 git-tree-sha1 = "bf6570a34c850f99407b494757f5d7ad233a7257"
 uuid = "a81c6b42-2e10-5240-aca2-a61377ecd94b"
 version = "0.9.5"
+
+[[deps.CompressedBeliefPOMDPs]]
+deps = ["BeliefUpdaters", "Convex", "DiscreteValueIteration", "ExpFamilyPCA", "ForwardDiff", "GridInterpolations", "Infiltrator", "LinearAlgebra", "LocalApproximationValueIteration", "LocalFunctionApproximation", "NearestNeighbors", "Optim", "POMDPModelTools", "POMDPModels", "POMDPPolicies", "POMDPSimulators", "POMDPTools", "POMDPs", "Parameters", "Plots", "QuickPOMDPs", "SCS", "StaticArrays"]
+path = "/Users/logan/VSCodeProjects/BeliefCompression/CompressedBeliefPOMDPs"
+uuid = "5eea3c19-248f-4333-a7fb-b3d728c4ea9c"
+version = "0.1.0"
 
 [[deps.ConcurrentUtilities]]
 deps = ["Serialization", "Sockets"]
@@ -340,6 +346,12 @@ deps = ["Test"]
 git-tree-sha1 = "dcb08a0d93ec0b1cdc4af184b26b591e9695423a"
 uuid = "460bff9d-24e4-43bc-9d9f-a8973cb893f4"
 version = "0.1.10"
+
+[[deps.ExpFamilyPCA]]
+deps = ["CompressedBeliefPOMDPs", "DiscreteValueIteration", "Interpolations", "Optim", "POMDPModels", "Parameters", "Plots"]
+path = "../ExpFamilyPCA"
+uuid = "11e87cda-3a35-409a-8e6b-280a62a99146"
+version = "0.1.0"
 
 [[deps.Expat_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
@@ -516,6 +528,12 @@ deps = ["ArnoldiMethod", "Compat", "DataStructures", "Distributed", "Inflate", "
 git-tree-sha1 = "899050ace26649433ef1af25bc17a815b3db52b7"
 uuid = "86223c79-3864-5bf0-83f7-82e725a168b6"
 version = "1.9.0"
+
+[[deps.GridInterpolations]]
+deps = ["LinearAlgebra", "Printf", "StaticArrays"]
+git-tree-sha1 = "d227d509b87d8faf2d5aa3804e1575a4a62eb111"
+uuid = "bb4c363b-b914-514b-8517-4eb369bc008a"
+version = "1.1.3"
 
 [[deps.Grisu]]
 git-tree-sha1 = "53bb909d1151e57e2484c3d1b53e19552b887fb2"
@@ -753,6 +771,18 @@ version = "7.2.0"
 [[deps.LinearAlgebra]]
 deps = ["Libdl", "OpenBLAS_jll", "libblastrampoline_jll"]
 uuid = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+
+[[deps.LocalApproximationValueIteration]]
+deps = ["LocalFunctionApproximation", "POMDPLinter", "POMDPTools", "POMDPs", "Printf", "Random"]
+git-tree-sha1 = "30df0ee83bb17c6c541b18375481d7ce2b17f909"
+uuid = "a40420fb-f401-52da-a663-f502e5b95060"
+version = "0.4.3"
+
+[[deps.LocalFunctionApproximation]]
+deps = ["Distances", "GridInterpolations", "NearestNeighbors"]
+git-tree-sha1 = "b1af506558a697ed3431665476c97a1d68771ccf"
+uuid = "db97f5ab-fc25-52dd-a8f9-02a257c35074"
+version = "1.1.1"
 
 [[deps.LogExpFunctions]]
 deps = ["DocStringExtensions", "IrrationalConstants", "LinearAlgebra"]

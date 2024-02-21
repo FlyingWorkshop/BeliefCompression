@@ -15,3 +15,11 @@ function fit!(approximator::Approximator, data) end
 Approximate the points using method associated with approximator, and returns the approximation.
 """
 function approximate(approximator::Approximator, points) end
+
+
+"""
+    weights(approximator::Approximator, points)
+
+Approximate the points using method associated with approximator, and returns the approximation.
+"""
+function weights(approximator::Approximator, points) end
