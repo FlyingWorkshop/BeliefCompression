@@ -3,9 +3,6 @@ module CompressedBeliefPOMDPs
 
 using Infiltrator
 
-# using POMDPs
-# using Optim
-
 export
     Compressor,
     fit!,
@@ -25,5 +22,8 @@ export
     solve
 include("solver.jl")
 
+export
+    CompressedBeliefMDP
+include("cbmdp.jl")
 
 end # module CompressedBeliefPOMDPs
