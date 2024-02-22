@@ -1,4 +1,7 @@
 using POMDPs: POMDP, Policy, Updater
+using POMDPTools: RandomPolicy, DiscreteUpdater
+using POMDPSimulators: stepthrough
+
 
 abstract type Sampler end
 

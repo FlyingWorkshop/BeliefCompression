@@ -4,7 +4,7 @@ using Optim
 using CompressedBeliefPOMDPs
 
 
-mutable struct EPCA <: CompressedBeliefPOMDPs.Compressor
+struct EPCA <: CompressedBeliefPOMDPs.Compressor
     n::Int  # number of samples
     d::Int  # size of each sample
     l::Int  # number of components
@@ -34,7 +34,7 @@ end
 #     return nothing
 # end
 
-
+# TODO: move this logic 
 function EPCA(l::Int, μ0::Real; ϵ::Float64=0.01)
     epca = EPCA()
     epca.l = l

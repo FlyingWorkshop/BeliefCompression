@@ -1,7 +1,8 @@
 function PoissonPCA(l::Int; μ0::Real=0, kwargs...)
     epca = EPCA(l, μ0; kwargs...)
     # TODO: eventually replace this w/ symbolic diff
-    ϵ = 10e-20
+    # ϵ = 10e-20
+    ϵ = eps()
     @. begin
         G(θ) = exp(θ)
         g(θ) = exp(θ)
