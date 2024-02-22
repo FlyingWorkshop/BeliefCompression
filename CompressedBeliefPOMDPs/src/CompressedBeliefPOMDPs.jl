@@ -1,5 +1,6 @@
 module CompressedBeliefPOMDPs
 
+
 using Infiltrator
 
 # using POMDPs
@@ -11,14 +12,6 @@ export
     compress,
     decompress
 include("compressor.jl")
-
-export
-    Approximator,
-    fit!,
-    approximate,
-    SingleNearestNeighbor
-include("approximation/approximator.jl")
-include("approximation/nearest_neighbor_approximator.jl")
 
 export
     Sampler,
