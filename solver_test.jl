@@ -1,4 +1,4 @@
-using CompressedBeliefPOMDPs
+using CompressedBeliefMDPs
 using ExpFamilyPCA
 
 using POMDPModels
@@ -28,17 +28,12 @@ tree = KDTree(data)
 k = 1  # k-nearest-neighbors
 func_approx = LocalNNFunctionApproximator(tree, data, k)
 
-# make approx solver
-approx_solver = LocalApproximationValueIterationSolver(func_approx, verbose=true, max_iterations=1000, is_mdp_generative=true, n_generative_samples=10)
-
-
+# make solver
+solver = LocalApproximationValueIterationSolver(func_approx, verbose=true, max_iterations=1000, is_mdp_generative=true, n_generative_samples=10)
 
 # make compressed belief MDP
 updater = DiscreteUpdater(pomdp)
-bmdp = GenerativeBeliefMDP(pomdp, updater)
-comp_bmdp = CompressedBeliefMDP(bmdp, compressor)
-# TODO: why doesn't this work?
-# comp_bmdp = CompressedBeliefMDP(pomdp, compressor, updater)
+mdp = CompressedBeliefMDP(pomdp, updater, compressor)
 
 # solve
-approx_policy = solve(approx_solver, comp_bmdp)
+policy = solve(solver, mdp)

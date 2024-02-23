@@ -1,4 +1,4 @@
-name = "CompressedBeliefPOMDPs"
+name = "CompressedBeliefMDPs"
 uuid = "5eea3c19-248f-4333-a7fb-b3d728c4ea9c"
 authors = ["Logan Mondal Bhamidipaty <76822456+FlyingWorkshop@users.noreply.github.com>"]
 version = "0.1.0"

@@ -1,4 +1,4 @@
-module CompressedBeliefPOMDPs
+module CompressedBeliefMDPs
 
 
 using Infiltrator
@@ -24,6 +24,6 @@ include("solver.jl")
 
 export
     CompressedBeliefMDP
-include("cbmdp.jl")
+include("compressed_belief_mdp.jl")
 
-end # module CompressedBeliefPOMDPs
+end # module CompressedBeliefMDPs

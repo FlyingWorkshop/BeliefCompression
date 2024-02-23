@@ -1,10 +1,10 @@
 module ExpFamilyPCA
 
 using Optim
-using CompressedBeliefPOMDPs
+using CompressedBeliefMDPs
 
-
-struct EPCA <: CompressedBeliefPOMDPs.Compressor
+# TODO: make this an imutable struct
+mutable struct EPCA <: CompressedBeliefMDPs.Compressor
     n::Int  # number of samples
     d::Int  # size of each sample
     l::Int  # number of components
@@ -44,7 +44,7 @@ function EPCA(l::Int, μ0::Real; ϵ::Float64=0.01)
 end
 
 
-function CompressedBeliefPOMDPs.fit!(epca::EPCA, X; verbose=false, maxiter::Int=50)
+function CompressedBeliefMDPs.fit!(epca::EPCA, X; verbose=false, maxiter::Int=50)
     @assert epca.l > 0
     epca.n, epca.d = size(X)
     epca.A = zeros(epca.n, epca.l)
@@ -60,7 +60,7 @@ function CompressedBeliefPOMDPs.fit!(epca::EPCA, X; verbose=false, maxiter::Int=
 end
 
 # TODO: make sure this works for both matrices and vectors!! also update the signature in compressed belief pomdps
-function CompressedBeliefPOMDPs.compress(epca::EPCA, X; maxiter=50, verbose=false)
+function CompressedBeliefMDPs.compress(epca::EPCA, X; maxiter=50, verbose=false)
     n, d = size(X)
     @assert d == epca.d
     Â = zeros(n, epca.l)
@@ -72,7 +72,7 @@ function CompressedBeliefPOMDPs.compress(epca::EPCA, X; maxiter=50, verbose=fals
     return Â * epca.V
 end
 
-CompressedBeliefPOMDPs.decompress(epca::EPCA, compressed) = epca.g(compressed)
+CompressedBeliefMDPs.decompress(epca::EPCA, compressed) = epca.g(compressed)
 
 
 export

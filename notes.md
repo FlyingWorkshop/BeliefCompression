@@ -18,3 +18,11 @@ TODO:
 * calculate losses by hand for bernoulli 
 * figure out how to use infiltrator to debug Poisson EPCA
 * figure out how to test poisson EPCA in a basic julia file (not just a notebook)
+
+
+TODO:
+* read about metaprogramming
+* why <:A not a valid argument in a function?
+
+
+SUGESTIONS for POMDPs.jl --> make a belief abstract type w/ discrete belief and continuous belief as subclasses

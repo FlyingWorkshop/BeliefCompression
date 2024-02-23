@@ -10,6 +10,7 @@ Fit the compressor to beliefs.
 """
 function fit! end
 
+# TODO: consider something like this: abstract type Pointy{T<:Real} end; see (https://docs.julialang.org/en/v1/manual/types/)
 """
     compress(compressor::Compressor, beliefs::AbstractArray)
 
