@@ -49,15 +49,15 @@ end
 
 POMDPs.actions(m::CompressedBeliefMDP, b̃) = actions(m.bmdp, decode(m, b̃))
 POMDPs.actions(m::CompressedBeliefMDP) = actions(m.bmdp)
-
 POMDPs.isterminal(m::CompressedBeliefMDP, b̃) = isterminal(m.bmdp, decode(m, b̃))
-
 POMDPs.discount(m::CompressedBeliefMDP{B, A}) where {B, A} = discount(m.bmdp)
-
-
-# TODO: fix
-POMDPs.actionindex(problem::CompressedBeliefMDP, a) = 1
 POMDPs.initialstate(m::CompressedBeliefMDP) = encode(m, initialstate(m.bmdp))
+# TODO: fix
+# POMDPs.actionindex(m::CompressedBeliefMDP, a) = actionindex(m.bmdp.pomdp)  # Why doesn't BabyPOMDP have an action index?
+function POMDPs.actionindex(m::CompressedBeliefMDP, a)
+    @infiltrate
+    return 1
+end
 
 ########################
 # MOVE EVERYTHING BELOW HERE SOMEWHERE ELSE LATER
