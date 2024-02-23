@@ -1,20 +1,15 @@
 using Symbolics
-using InverseFunctions
+using SymbolicUtils
 using Optim
 
 
-@variables θ
+@syms θ
 
 # G(θ) is a convex function
-G = log(1 + exp(θ))
+# G = log(1 + exp(θ))  # Bernoulli
+G = exp(θ)
 
 # g(θ) = G'(θ)
 Dθ = Differential(θ)
 g = expand_derivatives(Dθ(G))
-
-
-function f(x)
-    expr = Symbolics.toexpr(g)
-    θ = x
-    eval(expr)
 
