@@ -4,3 +4,6 @@
 [submodule "ExpFamilyPCA"]
 	path = ExpFamilyPCA
 	url = https://github.com/FlyingWorkshop/ExpFamilyPCA.jl
+[submodule "CompressedBeliefMDPs"]
+	path = CompressedBeliefMDPs
+	url = https://github.com/FlyingWorkshop/CompressedBeliefMDPs.jl
