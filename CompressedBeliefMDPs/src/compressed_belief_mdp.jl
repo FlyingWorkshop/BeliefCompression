@@ -40,7 +40,6 @@ function CompressedBeliefMDP(pomdp::POMDP, updater::Updater, compressor::Compres
 end
 
 function POMDPs.gen(m::CompressedBeliefMDP, b̃::V, a, rng::AbstractRNG) where V<:AbstractArray
-    # @infiltrate
     b = decode(m, b̃)
     bp, r = @gen(:sp, :r)(m.bmdp, b, a, rng)
     b̃p = encode(m, bp)
@@ -54,10 +53,7 @@ POMDPs.discount(m::CompressedBeliefMDP{B, A}) where {B, A} = discount(m.bmdp)
 POMDPs.initialstate(m::CompressedBeliefMDP) = encode(m, initialstate(m.bmdp))
 # TODO: fix
 # POMDPs.actionindex(m::CompressedBeliefMDP, a) = actionindex(m.bmdp.pomdp)  # Why doesn't BabyPOMDP have an action index?
-function POMDPs.actionindex(m::CompressedBeliefMDP, a)
-    @infiltrate
-    return 1
-end
+POMDPs.actionindex(m::CompressedBeliefMDP, a) = 1
 
 ########################
 # MOVE EVERYTHING BELOW HERE SOMEWHERE ELSE LATER
