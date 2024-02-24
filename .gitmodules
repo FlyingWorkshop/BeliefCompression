@@ -1,6 +1,3 @@
-[submodule "DbConnector"]
-	path = ExpFamilyPCA
-	url = https://github.com/FlyingWorkshop/ExpFamilyPCA.jl
 [submodule "ExpFamilyPCA"]
 	path = ExpFamilyPCA
 	url = https://github.com/FlyingWorkshop/ExpFamilyPCA.jl
