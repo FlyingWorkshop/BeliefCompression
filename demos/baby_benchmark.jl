@@ -10,8 +10,6 @@ begin
 	Pkg.activate()
 	using Revise
 
-	using Random
-
 	# JuliaPOMDPs
 	using POMDPs
 	using POMDPModels
@@ -24,7 +22,6 @@ pomdp = BabyPOMDP();
 # ╔═╡ 28574220-d159-4468-b66b-4cc24654662a
 begin
 	using BasicPOMCP
-
 	pomcp_solver = POMCPSolver(; c=5.0, tree_queries=1000, rng=MersenneTwister(1))
 	pomcp_planner = solve(pomcp_solver, pomdp)
 end
@@ -41,7 +38,7 @@ begin
 		n_samples=100, 
 		verbose=true,
 		k=10,
-		max_iterations=1000,
+		max_iterations=100,
 		n_generative_samples=10,
 	)
 	comp_policy = solve(comp_solver, pomdp)
@@ -50,7 +47,6 @@ end
 # ╔═╡ 253c9eaa-97c2-4205-8e51-9ef52181f3dc
 begin
 	using SARSOP
-	
 	sarsop_solver = SARSOPSolver()
 	sarsop_policy = solve(sarsop_solver, pomdp)
 end
@@ -98,11 +94,7 @@ begin
 end
 
 # ╔═╡ 59b10983-324d-41f0-ae17-5a10dacfd072
-begin
-	sim = RolloutSimulator(MersenneTwister(1), 10)
-	sarsop_r = simulate(sim, pomdp, sarsop_policy)
-	comp_r = simulate(sim, pomdp, comp_policy)
-end
+
 
 # ╔═╡ Cell order:
 # ╠═6635a1e0-cb76-4e9a-8262-2ba7f49dd939
