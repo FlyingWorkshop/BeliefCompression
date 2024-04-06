@@ -9,14 +9,14 @@ using Random
 using CompressedBeliefMDPs
 
 
-Random.seed!(3)
+Random.seed!(5)
 
 pomdp = RockSamplePOMDP(rocks_positions=[(2,3), (4,4), (4,2)], 
                         sensor_efficiency=20.0,
                         discount_factor=0.95, 
                         good_rock_reward = 20.0)
 
-updater = SIRParticleFilter(pomdp, 5000)
+updater = BootstrapFilter(pomdp, 1000)
 bmdp = GenerativeBeliefMDP(pomdp, updater)
 
 
