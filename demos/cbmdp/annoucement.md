@@ -3,7 +3,7 @@ https://github.com/JuliaPOMDP/CompressedBeliefMDPs.jl
 
 Hello everyone!
 
-I'm excited to announce CompressedBeliefMDPs.jl ([repo](https://github.com/JuliaPOMDP/CompressedBeliefMDPs.jl), [docs](https://juliapomdp.github.io/CompressedBeliefMDPs.jl/dev/)), *an upcoming addition* to the [POMDPs.jl](https://github.com/JuliaPOMDP/POMDPs.jl) ecosystem. CompressedBeliefMDPs.jl provides a framework for solving large POMDPs through [belief compression](https://www.cs.cmu.edu/~ggordon/roy-gordon-thrun.belief-compression-jair.pdf). 
+I'm excited to announce CompressedBeliefMDPs.jl (docs on repo), *an upcoming addition* to the [POMDPs.jl](https://github.com/JuliaPOMDP/POMDPs.jl) ecosystem. CompressedBeliefMDPs.jl provides a framework for solving large POMDPs through belief compression.
 
 **We are looking for suggestions, feature requests, and any other feedback people would like to share! We will be accepting feedback for around a week before we launch.**
 
@@ -46,7 +46,7 @@ Unfortunately, real-world problems are often much larger than poker (e.g., consi
 
 At the highest level, belief compression is just as its name implies: a compression of my beliefs. In the literature, belief is the word we use to describe a distribution over possible states. More intuitively, since I observe the world imperfectly, I don't know the _exact_ state I'm in for certain. Consider a rover on Mars, we only know its position through noisy sensor measurements that are beamed to Earth from millions of miles away: it's unreasonable to assume that we know the rover's exact position at any moment, but we do have some _belief_ over where it's likely to be. 
 
-Since real-world problems are large, we have to maintain belief over a potentially gargantuan number of states. Luckily, there are many real-world problems where belief is sparsely distributed or concentrated. Take the Mars rover example, while the Rover could theoretically be anywhere on the surface of the planet, it is more likely to be close to where its sensors say it is (this example is, of course, an exaggeration; real POMDPs for mobile robot navigation would likely not maintain belief over an entire planet's worth of positions). As another example, we could take stock prices. For non-volatile stocks, the price one second in the future is likely to be similar to the price it trades at now (this is the essence of [martingales](https://en.wikipedia.org/wiki/Martingale_(probability_theory)). 
+Since real-world problems are large, we have to maintain belief over a potentially gargantuan number of states. Luckily, there are many real-world problems where belief is sparsely distributed or concentrated. Take the Mars rover example, while the rover could theoretically be anywhere on the surface of the planet, it is more likely to be close to where its sensors say it is (this example is, of course, an exaggeration; real POMDPs for mobile robot navigation would likely not maintain belief over an entire planet's worth of positions). As another example, we could take stock prices. For non-volatile stocks, the price one second in the future is likely to be similar to the price it trades at now (this is the essence of martingales). 
 
 But what does all of this get at? The core idea of belief compression is this: _because I am likely to have some information about what state I'm in, it's inefficient to maintain belief about places I'm unlikely to be; if I can learn to more compactly represent my beliefs, then I can focus on planning from the most relevant belief-states._
 
