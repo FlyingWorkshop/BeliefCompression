@@ -1,2 +1,4 @@
 model.pomdpx
 policy.out
+count_lines.py
+plots
